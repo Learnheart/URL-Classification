@@ -39,6 +39,7 @@ rf_model = joblib.load('random_forest_1.4.1.pkl')
 dt_model = joblib.load('decision_tree_1.4.1.pkl')
 nb_model = joblib.load('naive_bayes_1.4.1.pkl')
 cnn_model = load_model('cnn_model_16_191.h5')
+svm_model = joblib.load('origin_svm_1.4.1.pkl')
 
 tokenizer = Tokenizer(oov_token='<OOV>')
 def url_to_text(url):
@@ -69,12 +70,13 @@ def main():
             rf_predict = rf_model.predict([input_processed])
             dt_predict = dt_model.predict([input_processed])
             nb_predict = nb_model.predict([input_processed])
+            svm_predict = svm_model.predict([input_processed])
             cnn_prediction = cnn_model.predict(process_texts([input_processed]))
 
             cnn_predicted_index = np.argmax(cnn_prediction, axis=1)[0]
             cnn_predicted_category = categories[cnn_predicted_index]
 
-            all_prediction = [rf_predict[0], xgb_predict[0], dt_predict[0], nb_predict[0], cnn_predicted_category]
+            all_prediction = [rf_predict[0], xgb_predict[0], dt_predict[0], nb_predict[0], svm_predict[0], cnn_predicted_category]
             final_prediction = Counter(all_prediction).most_common(1)[0][0]
             st.success(final_prediction)
         else:
